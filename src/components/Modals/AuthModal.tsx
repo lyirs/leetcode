@@ -1,10 +1,13 @@
+import { authModalState } from "@/atoms/authModalAtom";
 import React from "react";
 import { IoClose } from "react-icons/io5";
+import { useRecoilValue } from "recoil";
 import Login from "./Login";
 
 type AuthModalProps = {};
 
 const AuthModal: React.FC<AuthModalProps> = () => {
+  const authModal = useRecoilValue(authModalState);
   return (
     <>
       <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center bg-black bg-opacity-60"></div>
@@ -19,7 +22,7 @@ const AuthModal: React.FC<AuthModalProps> = () => {
                 <IoClose className="h-5 w-5" />
               </button>
             </div>
-            <Login />
+            {authModal.isOpen && <AuthModal />}
           </div>
         </div>
       </div>
