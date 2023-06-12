@@ -1,5 +1,6 @@
 import { authModalState } from "@/atoms/authModalAtom";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 type SingupProps = {};
@@ -9,8 +10,31 @@ const Singup: React.FC<SingupProps> = () => {
   const handleClick = () => {
     setAuthModalState((prev) => ({ ...prev, type: "login" }));
   };
+  const router = useRouter();
+  const [inputs, setInputs] = useState({
+    email: "",
+    displayName: "",
+    password: "",
+  });
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
+  const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputs.email || !inputs.displayName || !inputs.password)
+      return alert("Please fill all fields");
+    try {
+      console.log("create user");
+      router.push("/");
+    } catch (e: any) {
+      alert(e.message);
+    }
+  };
+
   return (
-    <form className="space-y-6 px-6 pb-4">
+    <form className="space-y-6 px-6 pb-4" onSubmit={handleRegister}>
       <h3 className="text-xl font-medium text-white">Register</h3>
       <div>
         <label
@@ -20,6 +44,7 @@ const Singup: React.FC<SingupProps> = () => {
           Email
         </label>
         <input
+          onChange={handleChangeInput}
           type="email"
           name="email"
           id="email"
@@ -35,6 +60,7 @@ const Singup: React.FC<SingupProps> = () => {
           Display Name
         </label>
         <input
+          onChange={handleChangeInput}
           type="displayName"
           name="displayName"
           id="displayName"
@@ -50,6 +76,7 @@ const Singup: React.FC<SingupProps> = () => {
           Password
         </label>
         <input
+          onChange={handleChangeInput}
           type="password"
           name="password"
           id="password"

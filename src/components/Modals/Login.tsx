@@ -1,17 +1,41 @@
 import { authModalState } from "@/atoms/authModalAtom";
-import React from "react";
+import { useRouter } from "next/router";
+import React, { useState } from "react";
 import { useSetRecoilState } from "recoil";
 
 type LoginProps = {};
 
 const Login: React.FC<LoginProps> = () => {
   const setAuthModalState = useSetRecoilState(authModalState);
+  const router = useRouter();
+
+  const [inputs, setInputs] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChangeInput = (e: React.ChangeEvent<HTMLInputElement>) => {
+    setInputs((prev) => ({ ...prev, [e.target.name]: e.target.value }));
+  };
+
   const handleClick = (type: "login" | "register" | "forgetPassword") => {
     setAuthModalState((prev) => ({ ...prev, type }));
   };
 
+  const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    if (!inputs.email || !inputs.password)
+      return alert("Please fill all fields");
+    try {
+      console.log("user log in");
+      router.push("/");
+    } catch (e: any) {
+      alert(e.message);
+    }
+  };
+
   return (
-    <form className="space-y-6 px-6 pb-4">
+    <form className="space-y-6 px-6 pb-4" onSubmit={handleLogin}>
       <h3 className="text-xl font-medium text-white">Sign in</h3>
       <div>
         <label
@@ -21,6 +45,7 @@ const Login: React.FC<LoginProps> = () => {
           Your Email
         </label>
         <input
+          onChange={handleChangeInput}
           type="email"
           name="email"
           id="email"
@@ -37,6 +62,7 @@ const Login: React.FC<LoginProps> = () => {
           Your Password
         </label>
         <input
+          onChange={handleChangeInput}
           type="password"
           name="password"
           id="password"
