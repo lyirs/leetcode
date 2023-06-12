@@ -1,6 +1,7 @@
 import { authModalState } from "@/atoms/authModalAtom";
 import { useRouter } from "next/router";
 import React, { useState } from "react";
+import { toast } from "react-toastify";
 import { useSetRecoilState } from "recoil";
 
 type LoginProps = {};
@@ -25,12 +26,18 @@ const Login: React.FC<LoginProps> = () => {
   const handleLogin = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (!inputs.email || !inputs.password)
-      return alert("Please fill all fields");
+      return toast.error("Please fill all fields", {
+        position: "top-center",
+        autoClose: 3000,
+      });
     try {
       console.log("user log in");
       router.push("/");
     } catch (e: any) {
-      alert(e.message);
+      toast.error(e.message, {
+        position: "top-center",
+        autoClose: 3000,
+      });
     }
   };
 
